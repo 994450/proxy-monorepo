@@ -21,10 +21,10 @@ jobs:
           java-version: '21'
 
       - name: Build SHIP Proxy JAR
-        run: mvn -f proxy-client/pom.xml clean package -DskipTests
+        run: mvn -f shipproxy-monorepo/proxy-client/pom.xml clean package -DskipTests
 
       - name: Build SHIP Proxy Docker Image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/ship-proxy:latest ./proxy-client
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/ship-proxy:latest ./shipproxy-monorepo/proxy-client
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -50,10 +50,10 @@ jobs:
           java-version: '21'
 
       - name: Build OFFSHORE Proxy JAR
-        run: mvn -f proxy-server/pom.xml clean package -DskipTests
+        run: mvn -f shipproxy-monorepo/proxy-server/pom.xml clean package -DskipTests
 
       - name: Build OFFSHORE Proxy Docker Image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/offshore-proxy:latest ./proxy-server
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/offshore-proxy:latest ./shipproxy-monorepo/proxy-server
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
