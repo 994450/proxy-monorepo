@@ -6,6 +6,22 @@ import java.net.*;
 public class ProxyClientHandler extends Thread {
     private final Socket browserSocket;
 
+    // Static variables 
+    private static Socket offshoreSocket;
+    private static OutputStream offshoreOut;
+    private static InputStream offshoreIn;
+
+    // Initialize the offshore connection once
+    static {
+        try {
+            offshoreSocket = new Socket("localhost", 9090); // hardcoded offshore
+            offshoreOut = offshoreSocket.getOutputStream();
+            offshoreIn = offshoreSocket.getInputStream();
+        } catch (IOException e) {
+            System.err.println("[OFFSHORE ERROR] Failed to connect to offshore server: " + e.getMessage());
+        }
+    }
+
     public ProxyClientHandler(Socket browserSocket) {
         this.browserSocket = browserSocket;
     }
@@ -19,11 +35,6 @@ public class ProxyClientHandler extends Thread {
             String requestLine = browserReader.readLine();
             if (requestLine == null) return;
             System.out.println("[CLIENT] Received: " + requestLine);
-
-            Socket offshoreSocket = new Socket("localhost", 9090); // hardcoded offshore
-            OutputStream offshoreOut = offshoreSocket.getOutputStream();
-            InputStream offshoreIn = offshoreSocket.getInputStream();
-
             offshoreOut.write((requestLine + "\r\n").getBytes());
 
             String line;
